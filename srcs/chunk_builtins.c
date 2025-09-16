@@ -77,7 +77,11 @@ void	stack_index(t_stack **stack, t_stack **stack_to_free)
 		lst = lst->next;
 	}
 	quick_sort(index, 0, (*stack)->size - 1);
-	verif_sim(index, stack, stack_to_free);
+	if (!verif_sim(index, *stack))
+	{
+		free(index);
+		push_exit(stack, stack_to_free, INPUT_ERROR);
+	}
 	lst = (*stack)->lst;
 	while (lst)
 	{

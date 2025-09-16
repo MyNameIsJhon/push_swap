@@ -90,7 +90,7 @@ int		count_in_chunk(t_stack *a, int low, int high);
 t_bool	verif_order(t_list *lst);
 char	verif_digits(int count, char **strs);
 t_bool	verif_limits(char **strs);
-t_bool	verif_sim(int *tab, t_stack **a, t_stack **b);
+t_bool	verif_sim(int *tab, t_stack *a);
 t_bool	param_is_valid(char *str);
 void	free_stack(t_stack **stack);
 void	push_exit(t_stack **stack_a, t_stack **stack_b, t_error error);
