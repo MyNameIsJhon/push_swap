@@ -1,40 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jriga <jriga@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 21:26:38 by jriga             #+#    #+#             */
-/*   Updated: 2025/08/07 21:36:35 by jriga            ###   ########.fr       */
+/*   Created: 2025/09/01 14:13:08 by jriga             #+#    #+#             */
+/*   Updated: 2025/09/01 14:15:22 by jriga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
 #include "libft.h"
 
-void test_dir(t_stack *a, t_stack *b)
+long	ft_atol(const char *str)
 {
-	t_dir *dir_a;
-	int		i;
-	(void)b;
+	int		sign;
+	long	result;
 
-	dir_a = dir_init(a, 0, 20);
-	i = 20;
-	while (i--)
+	sign = 1;
+	result = 0;
+	while (ft_ischarset(*str, " \t\v\n\r\f"))
+		str++;
+	if (*str == '-')
 	{
-		ft_printf("Index: %d, Dir: %d, Cost: %d\n", dir_a[i].index, dir_a[i].dir, dir_a[i].cost);
-	}	
-}
-
-void print_instructs(int *instructs)
-{
-	int i;
-
-	i = 0;
-	while (i < 6)
-	{
-		ft_printf("Instructs[%d]: %d\n", i, instructs[i]);
-		i++;
+		sign = (-1);
+		str++;
 	}
+	else if (*str == '+')
+		str++;
+	while (*str >= '0' && *str <= '9')
+	{
+		result *= 10;
+		result += (*str - '0') * sign;
+		str++;
+	}
+	return (result);
 }

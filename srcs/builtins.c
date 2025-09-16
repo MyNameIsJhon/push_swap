@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jriga <jriga@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 20:57:41 by jriga             #+#    #+#             */
-/*   Updated: 2025/08/16 14:20:09 by jriga            ###   ########.fr       */
+/*   Created: 2025/09/03 22:09:11 by jriga             #+#    #+#             */
+/*   Updated: 2025/09/04 01:33:09 by jriga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	push_init(int count, char **strs, t_stack **stack_a, t_stack **stack_b)
 {
 	if (count == 0)
 		push_exit(NULL, NULL, NONE);
-	if (!verif_digits(count, strs))
+	if (!verif_digits(count, strs) || !verif_limits(strs))
 		push_exit(NULL, NULL, INPUT_ERROR);
 	if (count == 1)
 		push_exit(NULL, NULL, NONE);
@@ -35,99 +35,78 @@ void	push_init(int count, char **strs, t_stack **stack_a, t_stack **stack_b)
 	(*stack_b)->lst = NULL;
 	stack_index(stack_a, stack_b);
 	if (verif_order((*stack_a)->lst))
-		push_exit(NULL, NULL, NONE);
+		push_exit(stack_a, stack_b, NONE);
 }
 
-int	binary_search(int *tab, int size, int nb)
+void	print_error(t_error error)
 {
-	int	low;
-	int	high;
-	int	mid;
-
-	low = 0;
-	high = size - 1;
-	mid = (low + high) / 2;
-	while (tab[mid] != nb)
-	{
-		if (low > high)
-			return (-1);
-		if (tab[mid] < nb)
-			low = mid + 1;
-		else
-			high = mid - 1;
-		mid = (low + high) / 2;
-	}
-	return (mid);
+	if (error == NONE)
+		ft_printf("No error\n");
+	else if (error == MEMORY_ERROR)
+		ft_puterror("Memory allocation error\n");
+	else if (error == INPUT_ERROR)
+		ft_puterror("Input error\n");
+	else if (error == ALGO_ERROR)
+		ft_puterror("Algorithm error\n");
+	else
+		ft_puterror("Unknown error\n");
 }
 
-t_bool	verif_sim(int *tab, t_stack **a, t_stack **b)
+void	push_exit(t_stack **stack_a, t_stack **stack_b, t_error error)
+{
+	if (stack_a)
+		free_stack(stack_a);
+	if (stack_b)
+		free_stack(stack_b);
+	if (error != NONE)
+	{
+		print_error(error);
+		exit(1);
+	}
+	exit(0);
+}
+
+static int	find_pos(t_list *lst, int index)
 {
 	int	i;
 
 	i = 0;
-	while (i < (int)(*a)->size - 1)
+	while (lst && lst->index != index)
 	{
-		if (tab[i] == tab[i + 1])
-			push_exit(a, b, INPUT_ERROR);
-		i++;
-	}
-	return (TRUE);
-}
-
-void	stack_index(t_stack **stack, t_stack **stack_to_free)
-{
-	int		*index;
-	t_list	*lst;
-	size_t	i;
-
-	index = (int *)malloc(sizeof(int) * ((*stack)->size + 1));
-	if (!index)
-		return ;
-	i = 0;
-	lst = (*stack)->lst;
-	while (lst)
-	{
-		index[i++] = lst->u_ctt.i;
-		lst = lst->next;
-	}
-	quick_sort(index, 0, (*stack)->size - 1);
-	verif_sim(index, stack, stack_to_free);
-	lst = (*stack)->lst;
-	while (lst)
-	{
-		lst->index = binary_search(index, (*stack)->size, lst->u_ctt.i);
-		lst = lst->next;
-	}
-	free(index);
-}
-
-int	push_index(t_stack *a, t_stack *b, int index)
-{
-	t_list	*lst;
-	int		i;
-
-	lst = a->lst;
-	i = 0;
-	while (lst)
-	{
-		if (lst->index == index)
-			break ;
 		lst = lst->next;
 		i++;
 	}
 	if (!lst)
-		return (0);
-	if (i <= (int)a->size / 2)
+		return (-1);
+	return (i);
+}
+
+static void	align_top(t_stack *a, int pos)
+{
+	int	i;
+
+	if (pos <= (int)a->size / 2)
 	{
+		i = pos;
 		while (i-- > 0)
 			rotate(a, TRUE);
 	}
 	else
 	{
-		i = a->size - i;
+		i = a->size - pos;
 		while (i-- > 0)
 			rrotate(a, TRUE);
 	}
+}
+
+int	push_index(t_stack *a, t_stack *b, int index)
+{
+	int	pos;
+
+	pos = find_pos(a->lst, index);
+	if (pos < 0)
+		return (0);
+	align_top(a, pos);
 	push(a, b);
 	return (b->lst->index);
 }

@@ -6,13 +6,14 @@
 /*   By: jriga <jriga@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 13:14:41 by jriga             #+#    #+#             */
-/*   Updated: 2025/08/16 13:15:20 by jriga            ###   ########.fr       */
+/*   Updated: 2025/09/04 01:32:33 by jriga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 #include "libft.h"
 #include <stdlib.h>
+#include <limits.h>
 
 void	free_stack(t_stack **stack)
 {
@@ -23,35 +24,6 @@ void	free_stack(t_stack **stack)
 		free(*stack);
 		*stack = NULL;
 	}
-}
-
-void	push_exit(t_stack **stack_a, t_stack **stack_b, t_error error)
-{
-	if (stack_a)
-		free_stack(stack_a);
-	if (stack_b)
-		free_stack(stack_b);
-	if (error != NONE)
-	{
-		ft_puterror("Error\n");
-		exit(1);
-	}
-	exit(0);
-}
-
-char	verif_digits(int count, char **strs)
-{
-	int	i;
-
-	i = 1;
-	if (count < 2)
-		return (0);
-	while (strs[i])
-	{
-		if (!ft_strisdigit(strs[i++]))
-			return (0);
-	}
-	return (1);
 }
 
 t_list	*stack_init(int count, char **strs)
@@ -71,17 +43,64 @@ t_list	*stack_init(int count, char **strs)
 	return (lst);
 }
 
-t_bool	verif_order(t_list *lst)
+static int	fill_dir(t_list *lst, t_dir *dir, int size, int range[2])
 {
-	if (lst == NULL)
-		return (TRUE);
-	if (lst && !lst->next)
-		return (TRUE);
-	while (lst->next)
+	int	i;
+	int	pos;
+	int	d;
+
+	i = 0;
+	pos = 0;
+	while (lst)
 	{
-		if (lst->index > lst->next->index)
-			return (FALSE);
+		if (lst->index >= range[0] && lst->index <= range[1])
+		{
+			if (pos < size / 2)
+				d = pos;
+			else
+				d = -(size - pos);
+			dir[i].index = lst->index;
+			dir[i].dir = d;
+			dir[i].cost = ft_abs(d);
+			i++;
+		}
 		lst = lst->next;
+		pos++;
 	}
+	return (i);
+}
+
+t_dir	*dir_init(t_stack *stack, int index_min, int index_max)
+{
+	t_dir	*dir;
+	int		range[2];
+	int		max;
+	int		alloc_sz;
+	int		n;
+
+	max = count_in_chunk(stack, index_min, index_max + 2);
+	alloc_sz = max;
+	if (alloc_sz < 1)
+		alloc_sz = 1;
+	dir = (t_dir *)malloc(sizeof(t_dir) * alloc_sz);
+	if (!dir)
+		return (NULL);
+	range[0] = index_min;
+	range[1] = index_max;
+	n = fill_dir(stack->lst, dir, (int)stack->size, range);
+	if (n > 1)
+		quick_sort_d(dir, 0, n - 1);
+	return (dir);
+}
+
+t_bool	param_is_valid(char *str)
+{
+	long	num;
+
+	if (!ft_strisdigit(str))
+		return (FALSE);
+	num = ft_atol(str);
+	if (num < INT_MIN || num > INT_MAX)
+		return (FALSE);
 	return (TRUE);
 }

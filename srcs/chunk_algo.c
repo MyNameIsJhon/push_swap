@@ -6,7 +6,7 @@
 /*   By: jriga <jriga@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 01:47:10 by jriga             #+#    #+#             */
-/*   Updated: 2025/08/16 14:21:36 by jriga            ###   ########.fr       */
+/*   Updated: 2025/09/03 22:30:52 by jriga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	dir_to_instructs(int *dir, t_dir a, t_dir b)
 
 void	instructs_action(t_stack *a, t_stack *b, int *instructs)
 {
-	int inst[6];
+	int	inst[6];
 
 	ft_memcpy(inst, instructs, sizeof(int) * 6);
 	while (inst[0]-- > 0)

@@ -6,7 +6,7 @@
 /*   By: jriga <jriga@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 09:38:23 by jriga             #+#    #+#             */
-/*   Updated: 2025/08/16 12:26:32 by jriga            ###   ########.fr       */
+/*   Updated: 2025/09/04 01:24:59 by jriga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,9 @@ void	ft_puterror(const char *str);
 void	ft_strsfree(char **strs);
 int		ft_strslen(char **strs);
 int		count_params(char *params);
+long	ft_atol(const char *str);
+t_bool	ft_inrange(long nb, long min, long max);
+int		binary_search(int *tab, int size, int nb);
+void	quick_sort(int *tab, int low, int high);
 
 #endif

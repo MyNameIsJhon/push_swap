@@ -6,11 +6,12 @@
 /*   By: jriga <jriga@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:04:38 by jriga             #+#    #+#             */
-/*   Updated: 2025/08/16 12:30:21 by jriga            ###   ########.fr       */
+/*   Updated: 2025/09/04 01:14:39 by jriga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+#include <stdlib.h>
 
 int	count_in_chunk(t_stack *a, int low, int high)
 {
@@ -57,4 +58,31 @@ int	calculate_cost(t_dir a, t_dir b)
 		return (ft_max(ft_abs(a.dir), ft_abs(b.dir)));
 	else
 		return (ft_abs(a.dir) + ft_abs(b.dir));
+}
+
+void	stack_index(t_stack **stack, t_stack **stack_to_free)
+{
+	int		*index;
+	t_list	*lst;
+	size_t	i;
+
+	index = (int *)malloc(sizeof(int) * ((*stack)->size + 1));
+	if (!index)
+		return ;
+	i = 0;
+	lst = (*stack)->lst;
+	while (lst)
+	{
+		index[i++] = lst->u_ctt.i;
+		lst = lst->next;
+	}
+	quick_sort(index, 0, (*stack)->size - 1);
+	verif_sim(index, stack, stack_to_free);
+	lst = (*stack)->lst;
+	while (lst)
+	{
+		lst->index = binary_search(index, (*stack)->size, lst->u_ctt.i);
+		lst = lst->next;
+	}
+	free(index);
 }

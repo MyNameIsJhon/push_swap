@@ -6,7 +6,7 @@
 /*   By: jriga <jriga@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:30:48 by jriga             #+#    #+#             */
-/*   Updated: 2025/08/10 19:16:36 by jriga            ###   ########.fr       */
+/*   Updated: 2025/09/04 01:27:37 by jriga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,33 @@ static void	algo_small(t_stack *a, t_stack *b)
 		push_index(b, a, b->size - 1);
 }
 
+int	count_algo(t_stack *a, t_stack *b, int index_min, int index_max)
+{
+	int		instructs[6];
+	int		count;
+	t_dir	*dir_a;
+	t_dir	*dir_b;
+
+	count = count_in_chunk(a, index_min, index_max);
+	dir_a = dir_init(a, index_min, index_max);
+	dir_b = dir_init(b, 0, a->size + b->size);
+	a->dir = dir_a;
+	b->dir = dir_b;
+	ft_bzero(instructs, sizeof(int) * 6);
+	if (!dir_a || !dir_b)
+	{
+		free(dir_a);
+		free(dir_b);
+		return (-1);
+	}
+	find_best_dir_u(a, b, instructs);
+	instructs_action(a, b, instructs);
+	push(a, b);
+	free(dir_a);
+	free(dir_b);
+	return (count);
+}
+
 void	pushswap_algo(t_stack *stack_a, t_stack *stack_b)
 {
 	if (!stack_a)
@@ -73,7 +100,7 @@ void	pushswap_algo(t_stack *stack_a, t_stack *stack_b)
 	{
 		push_index(stack_a, stack_b, 0);
 		while (stack_a->lst)
-			both_path(stack_a, stack_b, 0,
+			count_algo(stack_a, stack_b, 0,
 				stack_a->size + stack_b->size - 1);
 		while (stack_b->lst)
 			push_index(stack_b, stack_a, stack_b->size - 1);
