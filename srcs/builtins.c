@@ -35,21 +35,7 @@ void	push_init(int count, char **strs, t_stack **stack_a, t_stack **stack_b)
 	(*stack_b)->lst = NULL;
 	stack_index(stack_a, stack_b);
 	if (verif_order((*stack_a)->lst))
-		push_exit(stack_a, stack_b, NONE);
-}
-
-void	print_error(t_error error)
-{
-	if (error == NONE)
-		ft_printf("No error\n");
-	else if (error == MEMORY_ERROR)
-		ft_puterror("Memory allocation error\n");
-	else if (error == INPUT_ERROR)
-		ft_puterror("Input error\n");
-	else if (error == ALGO_ERROR)
-		ft_puterror("Algorithm error\n");
-	else
-		ft_puterror("Unknown error\n");
+		push_exit(NULL, NULL, NONE);
 }
 
 void	push_exit(t_stack **stack_a, t_stack **stack_b, t_error error)
@@ -60,7 +46,7 @@ void	push_exit(t_stack **stack_a, t_stack **stack_b, t_error error)
 		free_stack(stack_b);
 	if (error != NONE)
 	{
-		print_error(error);
+		ft_puterror("Error\n");
 		exit(1);
 	}
 	exit(0);

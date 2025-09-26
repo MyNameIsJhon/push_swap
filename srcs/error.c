@@ -73,15 +73,15 @@ t_bool	verif_order(t_list *lst)
 	return (TRUE);
 }
 
-t_bool	verif_sim(int *tab, t_stack *a)
+t_bool	verif_sim(int *tab, t_stack **a, t_stack **b)
 {
 	int	i;
 
 	i = 0;
-	while (i < (int)a->size - 1)
+	while (i < (int)(*a)->size - 1)
 	{
 		if (tab[i] == tab[i + 1])
-			return (FALSE);
+			push_exit(a, b, INPUT_ERROR);
 		i++;
 	}
 	return (TRUE);
