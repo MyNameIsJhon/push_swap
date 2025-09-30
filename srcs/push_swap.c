@@ -80,8 +80,6 @@ t_bool	push_init_ret(int count, char **strs, t_stack **a, t_stack **b)
 	(*b)->lst = NULL;
 	if (!stack_index(a))
 		return (FALSE);
-	if (verif_order((*a)->lst))
-		return (FALSE);
 	return (TRUE);
 }
 

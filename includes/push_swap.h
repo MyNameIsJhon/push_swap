@@ -39,7 +39,8 @@ typedef enum s_error
 	NONE,
 	MEMORY_ERROR,
 	ALGO_ERROR,
-	INPUT_ERROR
+	INPUT_ERROR,
+	ORDERED
 }	t_error;
 
 /* ************************************************************************** */
